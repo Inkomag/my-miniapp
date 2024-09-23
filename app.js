@@ -45,6 +45,23 @@ function renderGrid() {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Получение информации от Telegram WebApp API
+    const telegram = window.Telegram.WebApp;
+    const user = telegram.initDataUnsafe.user;
+
+    if (user) {
+        document.getElementById("greeting").innerText = `Привет, ${user.first_name}!`;
+    }
+
+    // Автоматически расширяем приложение на весь экран
+    telegram.expand();
+});
+
+function buttonClicked() {
+    alert("Кнопка нажата!");
+}
+
 function checkSolution() {
     if (isValidSudoku(grid)) {
         alert("Правильное решение!");
