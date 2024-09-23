@@ -1,5 +1,5 @@
+// Начальная сетка судоку
 const grid = [
-    // Пример генерации судоку: 0 обозначает пустые клетки
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
     [0, 9, 8, 0, 0, 0, 0, 6, 0],
@@ -11,10 +11,7 @@ const grid = [
     [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ];
 
-window.onload = function() {
-    renderGrid();
-};
-
+// Рендеринг сетки судоку
 function renderGrid() {
     const table = document.getElementById("sudoku-grid");
     table.innerHTML = '';
@@ -29,12 +26,12 @@ function renderGrid() {
                 input.type = "text";
                 input.maxLength = 1;
                 input.oninput = function() {
-                    const value = parseInt(this.value);
-                    if (!isNaN(value) && value > 0 && value <= 9) {
-                        grid[i][j] = value;
+                    const value = this.value;
+                    if (!isNaN(value) && value >= 1 && value <= 9) {
+                        grid[i][j] = parseInt(value);
                     } else {
                         this.value = '';
-                        grid[i][j] = 0;
+                        grid[i][j] = 0; // сброс если неверное значение
                     }
                 };
                 cell.appendChild(input);
@@ -45,42 +42,82 @@ function renderGrid() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Получение информации от Telegram WebApp API
-    const telegram = window.Telegram.WebApp;
-    const user = telegram.initDataUnsafe.user;
-
-    if (user) {
-        document.getElementById("greeting").innerText = `Привет, ${user.first_name}!`;
-    }
-
-    // Автоматически расширяем приложение на весь экран
-    telegram.expand();
-});
-
-function buttonClicked() {
-    alert("Кнопка нажата!");
-}
-
+// Проверка правильности решения судоку
 function checkSolution() {
     if (isValidSudoku(grid)) {
         alert("Правильное решение!");
     } else {
-        alert("Неправильно! Попробуйте снова.");
+        alert("Ошибка в решении! Попробуйте снова.");
     }
 }
 
+// Проверка строки, столбца и блока 3x3 на правильность
 function isValidSudoku(grid) {
-    // Функция для проверки правильности заполнения судоку
-    // Реализуйте вашу логику проверки
+    for (let i = 0; i < 9; i++) {
+        if (!isValidRow(grid, i) || !isValidColumn(grid, i) || !isValidBox(grid, i)) {
+            return false;
+        }
+    }
     return true;
 }
 
+function isValidRow(grid, row) {
+    let seen = new Set();
+    for (let col = 0; col < 9; col++) {
+        const value = grid[row][col];
+        if (value !== 0) {
+            if (seen.has(value)) {
+                return false;
+            }
+            seen.add(value);
+        }
+    }
+    return true;
+}
+
+function isValidColumn(grid, col) {
+    let seen = new Set();
+    for (let row = 0; row < 9; row++) {
+        const value = grid[row][col];
+        if (value !== 0) {
+            if (seen.has(value)) {
+                return false;
+            }
+            seen.add(value);
+        }
+    }
+    return true;
+}
+
+function isValidBox(grid, box) {
+    let seen = new Set();
+    const startRow = Math.floor(box / 3) * 3;
+    const startCol = (box % 3) * 3;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            const value = grid[startRow + i][startCol + j];
+            if (value !== 0) {
+                if (seen.has(value)) {
+                    return false;
+                }
+                seen.add(value);
+            }
+        }
+    }
+    return true;
+}
+
+// Очистка поля
 function resetGame() {
     renderGrid();
 }
 
+// Подсказка (упрощенная)
 function getHint() {
-    // Реализуйте логику подсказки
-    alert("Подсказка не реализована");
+    alert("Подсказка не реализована.");
 }
+
+// Рендеринг сетки при загрузке страницы
+window.onload = function() {
+    renderGrid();
+};
