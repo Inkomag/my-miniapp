@@ -1,4 +1,3 @@
-// Начальная сетка судоку
 const grid = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -11,7 +10,6 @@ const grid = [
     [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ];
 
-// Рендеринг сетки судоку
 function renderGrid() {
     const table = document.getElementById("sudoku-grid");
     table.innerHTML = '';
@@ -42,16 +40,17 @@ function renderGrid() {
     }
 }
 
-// Проверка правильности решения судоку
 function checkSolution() {
+    const messageElement = document.getElementById("message");
     if (isValidSudoku(grid)) {
-        alert("Правильное решение!");
+        messageElement.innerText = "Правильное решение!";
+        messageElement.style.color = "green";
     } else {
-        alert("Ошибка в решении! Попробуйте снова.");
+        messageElement.innerText = "Ошибка в решении! Попробуйте снова.";
+        messageElement.style.color = "red";
     }
 }
 
-// Проверка строки, столбца и блока 3x3 на правильность
 function isValidSudoku(grid) {
     for (let i = 0; i < 9; i++) {
         if (!isValidRow(grid, i) || !isValidColumn(grid, i) || !isValidBox(grid, i)) {
@@ -107,12 +106,12 @@ function isValidBox(grid, box) {
     return true;
 }
 
-// Очистка поля
 function resetGame() {
     renderGrid();
+    document.getElementById("message").innerText = '';
 }
 
-// Подсказка (упрощенная)
+// Упрощенная подсказка
 function getHint() {
     alert("Подсказка не реализована.");
 }
